@@ -1,0 +1,37 @@
+---
+output: html_document
+---
+
+## Regions of Brazil
+
+```{r data_gerado, echo=FALSE, results="hide"}
+diaGerado <-  format(Sys.time(), "%d/%b/%Y")  
+```
+Date: `r diaGerado`  
+
+```{r mapa, echo=FALSE, message=FALSE, warning=FALSE}
+library(maptools)
+library(RColorBrewer)
+library(leaflet)
+
+mapaUF = readShapePoly("C:\\Leo\\Programas\\rwd\\estados_2010.shp")
+
+paletaDeCores <- brewer.pal(5, 'Set1')
+
+coresDasCategorias <- data.frame(categ=levels(mapaUF@data$regiao_id), Cores=paletaDeCores)
+
+coresRegiao <-  data.frame(categ = mapaUF@data$regiao_id, uf = mapaUF@data$sigla)
+
+coresRegiao <-  merge(coresRegiao, coresDasCategorias)
+
+coresRegiao = coresRegiao[order(as.numeric(coresRegiao$uf)),]
+
+leaflet(mapaUF) %>% 
+  addTiles() %>%
+  addPolygons(
+    stroke = FALSE, fillOpacity = 0.3, smoothFactor = 1,
+    color = as.character(coresRegiao$Cores),
+    popup = mapaUF$nome) %>% 
+  addLegend(labels = c("South", "South East", "North", "North East", "Center West" ), colors = paletaDeCores)
+```
+
