@@ -1,6 +1,6 @@
 ---
 title: "Last 30 Days Earthquakes"
-author: "LÈo Maranh„o"
+author: "L√©o Maranh√£o"
 date: "december 6th, 2016"
 output: ioslides_presentation
 ---
