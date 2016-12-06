@@ -1,0 +1,82 @@
+---
+title: "Last 30 Days Earthquakes"
+author: "Léo Maranhão"
+date: "december 6th, 2016"
+output: ioslides_presentation
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+
+library(plotly)
+
+df <- read.csv('http://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/all_month.csv')
+
+```
+
+## All Magnitudes
+
+```{r map, echo = FALSE, message=FALSE, warning=FALSE}
+
+df2 <- df[!is.na(df$mag),]
+#df$q <- with(df, cut(depth, quantile(depth)))
+#levels(df$q) <- paste(c("1st", "2nd", "3rd", "4th"), "Quantile")
+#df$q <- as.ordered(df$q)
+
+g <- list(
+  showland = TRUE,
+  landcolor = toRGB("gray85"),
+  subunitwidth = 1,
+  countrywidth = 1,
+  subunitcolor = toRGB("white"),
+  countrycolor = toRGB("white"),
+  showcountries = TRUE,
+  showframe = FALSE
+)
+
+p <- plot_geo(df2, sizes = c(1, 750)) %>%
+  add_markers(
+    x = ~longitude, y = ~latitude, size = ~mag^4, color = ~mag, hoverinfo = "text",
+    text = ~paste(df2$place, "<br /> Depth:", df2$depth, " km  Mag:", df2$mag)
+  ) %>%
+  layout(geo = g)
+
+p
+
+```
+
+## Above Magnitude 5
+
+```{r mapAbove5, echo = FALSE, message=FALSE, warning=FALSE}
+
+df <- df[!is.na(df$mag) & df$mag>5.0,]
+#df$q <- with(df, cut(depth, quantile(depth)))
+#levels(df$q) <- paste(c("1st", "2nd", "3rd", "4th"), "Quantile")
+#df$q <- as.ordered(df$q)
+
+g <- list(
+  showland = TRUE,
+  landcolor = toRGB("gray85"),
+  subunitwidth = 1,
+  countrywidth = 1,
+  subunitcolor = toRGB("white"),
+  countrycolor = toRGB("white"),
+  showcountries = TRUE,
+  showframe = FALSE
+)
+
+p <- plot_geo(df, sizes = c(1, 750)) %>%
+  add_markers(
+    x = ~longitude, y = ~latitude, size = ~mag^4, color = ~mag, hoverinfo = "text",
+    text = ~paste(df$place, "<br /> Depth:", df$depth, " km  Mag:", df$mag)
+  ) %>%
+  layout(geo = g)
+
+p
+
+```
+
+## Thank you
+
+
+
